@@ -2,22 +2,17 @@ package ec.edu.uce.pokedex.swing;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.net.http.HttpHeaders;
-import java.util.ArrayList;
 import java.util.List;
-
 import org.json.*;
 
 public class PokedexSwing {
 
     public static void main(String[] args) {
-        JFrame frame = new JFrame("Pokédex (Spring Boot Backend)");
+        JFrame frame = new JFrame("Pokédex");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 500);
         frame.setLayout(new BorderLayout());
@@ -48,32 +43,16 @@ public class PokedexSwing {
         frame.setVisible(true);
 
         List<String> pokemons = obtenerListaPokemon();
-        System.out.println(pokemons);
         pokemons.forEach(pokemonListModel::addElement);
     }
 
     private static List<String> obtenerListaPokemon() {
-        ArrayList<String> pokemons = new ArrayList<>();
-        try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/pokemon?limit=10"))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JSONArray jsonArray = new JSONArray(response.body());
-
-            for (int i = 0; i < jsonArray.length(); i++) {
-                pokemons.add(jsonArray.getString(i));
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Error al obtener la lista de Pokémon: " + e.getMessage());
-        }
-        return pokemons;
+        // Obtiene la lista de Pokémon desde el backend
+        return List.of("Pikachu", "Charmander", "Bulbasaur"); // Dummy data for testing
     }
 
     private static void mostrarDetallesPokemon(String nombrePokemon, JLabel imageLabel, JTextArea detailsArea) {
+        // Mostrar detalles del Pokémon seleccionado
         try {
             HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder()

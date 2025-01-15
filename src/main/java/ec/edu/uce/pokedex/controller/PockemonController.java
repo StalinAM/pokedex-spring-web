@@ -1,65 +1,41 @@
-package ec.edu.uce.pokedex.controller;
-
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.json.*;
-import java.util.*;
-
-@RestController
-@RequestMapping("/api/pokemon")
-public class PockemonController {
-    private static final String POKEAPI_BASE_URL = "https://pokeapi.co/api/v2/pokemon";
-
-    @GetMapping
-    public List<String> getPokemonList(@RequestParam(defaultValue = "50") int limit) {
-        List<String> pokemonNames = new ArrayList<>();
-        String url = POKEAPI_BASE_URL + "?limit=" + limit;
-
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(url, String.class);
-
-        JSONObject jsonResponse = new JSONObject(response);
-        JSONArray results = jsonResponse.getJSONArray("results");
-
-        for (int i = 0; i < results.length(); i++) {
-            JSONObject pokemon = results.getJSONObject(i);
-            pokemonNames.add(pokemon.getString("name"));
-        }
-
-        return pokemonNames;
-    }
-
-    @GetMapping("/{name}")
-    public Map<String, Object> getPokemonDetails(@PathVariable String name) {
-        String url = POKEAPI_BASE_URL + "/" + name;
-
-        RestTemplate restTemplate = new RestTemplate();
-        String response = restTemplate.getForObject(url, String.class);
-
-        JSONObject jsonResponse = new JSONObject(response);
-        Map<String, Object> pokemonDetails = new HashMap<>();
-
-        // Extraer la imagen
-        String imageUrl = jsonResponse.getJSONObject("sprites").getString("front_default");
-        pokemonDetails.put("image", imageUrl);
-
-        // Extraer tipos
-        JSONArray typesArray = jsonResponse.getJSONArray("types");
-        List<String> types = new ArrayList<>();
-        for (int i = 0; i < typesArray.length(); i++) {
-            types.add(typesArray.getJSONObject(i).getJSONObject("type").getString("name"));
-        }
-        pokemonDetails.put("types", types);
-
-        // Extraer habilidades
-        JSONArray abilitiesArray = jsonResponse.getJSONArray("abilities");
-        List<String> abilities = new ArrayList<>();
-        for (int i = 0; i < abilitiesArray.length(); i++) {
-            abilities.add(abilitiesArray.getJSONObject(i).getJSONObject("ability").getString("name"));
-        }
-        pokemonDetails.put("abilities", abilities);
-
-        return pokemonDetails;
-    }
-
-}
+//package ec.edu.uce.pokedex.controller;
+//
+//import ec.edu.uce.pokedex.entities.Pokemon;
+//import ec.edu.uce.pokedex.repository.PokemonRepository;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.web.bind.annotation.*;
+//import java.util.*;
+//
+//
+//@RestController
+//@RequestMapping("/api/pokemon")
+//public class PockemonController {
+//
+//    @Autowired
+//    private PokemonRepository pokemonRepository;
+//
+//    // Obtener todos los Pokémon
+//    @GetMapping
+//    public List<Pokemon> getAllPokemons() {
+//        return pokemonRepository.findAll();
+//    }
+//
+//    // Obtener Pokémon por nombre
+//    @GetMapping("/{name}")
+//    public Pokemon getPokemonByName(@PathVariable String name) {
+//        return pokemonRepository.findByName(name);
+//    }
+//
+//    // Obtener Pokémon por tipo
+//    @GetMapping("/byType")
+//    public List<Pokemon> getPokemonsByType(@RequestParam String type) {
+//        return pokemonRepository.findByTypes_NameIgnoreCase(type);
+//    }
+//
+//    // Obtener Pokémon por habilidad
+//    @GetMapping("/byAbility")
+//    public List<Pokemon> getPokemonsByAbility(@RequestParam String ability) {
+//        return pokemonRepository.findByAbilities_NameIgnoreCase(ability);
+//    }
+//}
+//
