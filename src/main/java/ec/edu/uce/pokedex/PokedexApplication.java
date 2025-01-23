@@ -2,7 +2,7 @@ package ec.edu.uce.pokedex;
 
 import ec.edu.uce.pokedex.api.PokeService;
 import ec.edu.uce.pokedex.service.PokemonService;
-import ec.edu.uce.pokedex.swing.PokedexSwing;
+import ec.edu.uce.pokedex.swing.PokedexGUI;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -28,9 +28,9 @@ public class PokedexApplication implements CommandLineRunner {
         pokeService.fetchAndSaveAllPokemon();
         if (!GraphicsEnvironment.isHeadless()) {
             SwingUtilities.invokeLater(() -> {
-                PokedexSwing pokedexSwing = new PokedexSwing(pokemonService);
-                pokedexSwing.setVisible(true);
-                pokedexSwing.loadPokemons();
+                PokedexGUI pokedexGUI = new PokedexGUI(pokemonService);
+                pokedexGUI.setVisible(true);
+                pokedexGUI.loadPokemons();
             });
         } else {
             System.out.println("Entorno sin GUI detectado. Ejecución en modo headless.");
