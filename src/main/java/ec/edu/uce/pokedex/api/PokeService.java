@@ -14,7 +14,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PokeService {
@@ -70,7 +72,11 @@ public class PokeService {
                 type.setName(typeName);
                 types.add(type);
             }
-            pokemon.setTypes(types);
+            System.out.println(types.toString());
+            Set<Type> setTypes = new HashSet<>(types);
+            List<Type> newTypes = new ArrayList<>(setTypes);
+            System.out.println(newTypes.toString());
+            pokemon.setTypes(newTypes);
 
             // Guardar en la base de datos
             pokemonRepository.save(pokemon);

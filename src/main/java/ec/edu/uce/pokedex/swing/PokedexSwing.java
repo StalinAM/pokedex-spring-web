@@ -1,91 +1,153 @@
 package ec.edu.uce.pokedex.swing;
 
+import ec.edu.uce.pokedex.entities.Pokemon;
+import ec.edu.uce.pokedex.service.PokemonService;
+
 import javax.swing.*;
 import java.awt.*;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import org.json.*;
 
-public class PokedexSwing {
+public class PokedexSwing extends JFrame {
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("Pokédex");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
-        frame.setLayout(new BorderLayout());
+    private PokemonService pokemonService;
+    private JList<String> pokemonList;
+    private DefaultListModel<String> pokemonListModel;
+    private JTextArea pokemonDetailsArea;
+    private JTextField searchField;
+    private JButton searchButton;
+    private JComboBox<String> filterTypeComboBox;
 
-        DefaultListModel<String> pokemonListModel = new DefaultListModel<>();
-        JList<String> pokemonList = new JList<>(pokemonListModel);
+    public PokedexSwing(PokemonService pokemonService) {
+        this.pokemonService = pokemonService;
+        pokemonListModel = new DefaultListModel<>();
+        pokemonList = new JList<>(pokemonListModel);
+        pokemonDetailsArea = new JTextArea(10, 30);
+        searchField = new JTextField(20);
+        searchButton = new JButton("Search");
+        filterTypeComboBox = new JComboBox<>(new String[]{"All Types", "Fire", "Water", "Grass", "Electric"}); // Add more types as needed
 
-        JPanel detailsPanel = new JPanel(new BorderLayout());
-        JLabel pokemonImageLabel = new JLabel();
-        pokemonImageLabel.setHorizontalAlignment(JLabel.CENTER);
-        JTextArea pokemonDetailsArea = new JTextArea();
-        pokemonDetailsArea.setWrapStyleWord(true);
-        pokemonDetailsArea.setLineWrap(true);
+        setTitle("Pokedex");
+        setSize(600, 400);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
+        // Panel for search and list display
+        JPanel topPanel = new JPanel();
+        topPanel.add(new JLabel("Search Pokémon by Name:"));
+        topPanel.add(searchField);
+        topPanel.add(searchButton);
+        topPanel.add(filterTypeComboBox);
+
+        // Scroll pane for Pokémon list
+        JScrollPane listScrollPane = new JScrollPane(pokemonList);
+
+        // Text area to display Pokémon details
+        JScrollPane detailsScrollPane = new JScrollPane(pokemonDetailsArea);
         pokemonDetailsArea.setEditable(false);
 
-        detailsPanel.add(pokemonImageLabel, BorderLayout.NORTH);
-        detailsPanel.add(new JScrollPane(pokemonDetailsArea), BorderLayout.CENTER);
+        // Add components to the frame
+        add(topPanel, BorderLayout.NORTH);
+        add(listScrollPane, BorderLayout.CENTER);
+        add(detailsScrollPane, BorderLayout.SOUTH);
 
-        pokemonList.addListSelectionListener(e -> {
-            String selectedPokemon = pokemonList.getSelectedValue();
-            if (selectedPokemon != null) {
-                mostrarDetallesPokemon(selectedPokemon, pokemonImageLabel, pokemonDetailsArea);
+        // Action listener for the search button
+        searchButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                String query = searchField.getText();
+                String selectedType = (String) filterTypeComboBox.getSelectedItem();
+                if (selectedType != null && !selectedType.equals("All Types")) {
+                    searchPokemonsByType(selectedType);
+                } else {
+                    searchPokemonByName(query);
+                }
             }
         });
 
-        frame.add(new JScrollPane(pokemonList), BorderLayout.WEST);
-        frame.add(detailsPanel, BorderLayout.CENTER);
-        frame.setVisible(true);
-
-        List<String> pokemons = obtenerListaPokemon();
-        pokemons.forEach(pokemonListModel::addElement);
+        // Action listener for when a Pokémon is clicked in the list
+        pokemonList.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                String selectedPokemonName = pokemonList.getSelectedValue();
+                if (selectedPokemonName != null) {
+                    showPokemonDetails(selectedPokemonName);
+                }
+            }
+        });
     }
 
-    private static List<String> obtenerListaPokemon() {
-        // Obtiene la lista de Pokémon desde el backend
-        return List.of("Pikachu", "Charmander", "Bulbasaur"); // Dummy data for testing
-    }
-
-    private static void mostrarDetallesPokemon(String nombrePokemon, JLabel imageLabel, JTextArea detailsArea) {
-        // Mostrar detalles del Pokémon seleccionado
+    // Método para cargar Pokémon desde la base de datos
+    public void loadPokemons() {
         try {
-            HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:8080/api/pokemon/" + nombrePokemon))
-                    .build();
-
-            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            JSONObject jsonResponse = new JSONObject(response.body());
-
-            // Mostrar imagen
-            String imageUrl = jsonResponse.getString("image");
-            ImageIcon pokemonImage = new ImageIcon(new URI(imageUrl).toURL());
-            imageLabel.setIcon(pokemonImage);
-
-            // Mostrar tipos y habilidades
-            JSONArray typesArray = jsonResponse.getJSONArray("types");
-            JSONArray abilitiesArray = jsonResponse.getJSONArray("abilities");
-
-            StringBuilder details = new StringBuilder();
-            details.append("Tipos: ");
-            for (int i = 0; i < typesArray.length(); i++) {
-                details.append(typesArray.getString(i)).append(" ");
+            List<Pokemon> pokemons = pokemonService.getAllPokemonsSorted("asc");
+            pokemonListModel.clear();
+            for (Pokemon pokemon : pokemons) {
+                pokemonListModel.addElement(pokemon.getName());
             }
-            details.append("\nHabilidades: ");
-            for (int i = 0; i < abilitiesArray.length(); i++) {
-                details.append(abilitiesArray.getString(i)).append(" ");
-            }
-
-            detailsArea.setText(details.toString());
-
         } catch (Exception e) {
-            detailsArea.setText("Error al obtener detalles del Pokémon: " + e.getMessage());
-            imageLabel.setIcon(null);
+            JOptionPane.showMessageDialog(this, "Error loading Pokémon data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // Método para buscar un Pokémon por nombre
+    private void searchPokemonByName(String name) {
+        try {
+            Pokemon pokemon = pokemonService.getPokemonByName(name);
+            if (pokemon != null) {
+                showPokemonDetails(pokemon.getName());
+            } else {
+                JOptionPane.showMessageDialog(this, "Pokémon not found!", "Error", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error searching for Pokémon: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método para buscar Pokémon por tipo
+    private void searchPokemonsByType(String typeName) {
+        try {
+            List<Pokemon> pokemons = pokemonService.getPokemonsByType(typeName);
+            if (!pokemons.isEmpty()) {
+                pokemonListModel.clear();
+                pokemons.forEach(pokemon -> pokemonListModel.addElement(pokemon.getName()));
+            } else {
+                JOptionPane.showMessageDialog(this, "No Pokémon found for this type.", "Info", JOptionPane.INFORMATION_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error searching for Pokémon: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // Método para mostrar los detalles del Pokémon
+    private void showPokemonDetails(String pokemonName) {
+        try {
+            Pokemon pokemon = pokemonService.getPokemonByName(pokemonName);
+            if (pokemon != null) {
+                StringBuilder details = new StringBuilder();
+                details.append("Name: ").append(pokemon.getName()).append("\n");
+                details.append("Height: ").append(pokemon.getHeight()).append("\n");
+                details.append("Weight: ").append(pokemon.getWeight()).append("\n");
+                details.append("Abilities: ");
+                pokemon.getAbilities().forEach(ability -> details.append(ability.getName()).append(", "));
+                details.append("\nTypes: ");
+                pokemon.getTypes().forEach(type -> details.append(type.getName()).append(", "));
+                pokemonDetailsArea.setText(details.toString());
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error displaying details: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            // Mocking the PokemonService (In a real scenario it will be autowired by Spring)
+            PokemonService pokemonService = new PokemonService(); // Initialize with your actual service
+            PokedexSwing pokedexSwing = new PokedexSwing(pokemonService);
+            pokedexSwing.setVisible(true);
+
+            // Load Pokémon data from the database after startup
+            pokedexSwing.loadPokemons();
+        });
     }
 }
