@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PokedexGUI extends JFrame {
@@ -20,9 +21,7 @@ public class PokedexGUI extends JFrame {
     private JList<String> abilitiesList, typesList;
     private PokemonService pokemonService;
 
-    /**
-     * Launch the application.
-     */
+
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -171,9 +170,16 @@ public class PokedexGUI extends JFrame {
 
     public void loadPokemons() {
         try {
-            List<Pokemon> pokemons = pokemonService.getAllPokemonsSorted("asc");
-            pokemonListModel.clear();
-            pokemons.forEach(pokemon -> pokemonListModel.addElement(pokemon.getName()));
+            String query = searchField.getText();
+            if(query.isEmpty()) {
+                List<Pokemon> pokemons = pokemonService.getAllPokemonsSorted("asc");
+                pokemonListModel.clear();
+                pokemons.forEach(pokemon -> pokemonListModel.addElement(pokemon.getName()));
+            }
+            if(!query.isEmpty()){
+
+            }
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading Pokémon data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -182,12 +188,16 @@ public class PokedexGUI extends JFrame {
     private void searchPokemon() {
         try {
             String query = searchField.getText();
-            Pokemon pokemon = pokemonService.getPokemonByName(query);
-            if (pokemon != null) {
-                showPokemonDetails(pokemon.getName());
-            } else {
-                JOptionPane.showMessageDialog(this, "No se encontró el Pokémon.", "Error", JOptionPane.INFORMATION_MESSAGE);
-            }
+            List<Pokemon> pokemons = pokemonService.getAllPokemonsSorted("asc");
+            System.out.println(pokemons.toString());
+            pokemonListModel.clear();
+            pokemons.forEach(pokemon -> {
+                if(pokemon.getName().contains(query)) {
+                    System.out.println(pokemon.getName());
+                    pokemonListModel.addElement(pokemon.getName());
+                }
+            });
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al buscar Pokémon: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }

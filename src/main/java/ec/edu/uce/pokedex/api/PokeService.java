@@ -72,11 +72,8 @@ public class PokeService {
                 type.setName(typeName);
                 types.add(type);
             }
-            System.out.println(types.toString());
-            Set<Type> setTypes = new HashSet<>(types);
-            List<Type> newTypes = new ArrayList<>(setTypes);
-            System.out.println(newTypes.toString());
-            pokemon.setTypes(newTypes);
+
+            pokemon.setTypes(types);
 
             // Guardar en la base de datos
             pokemonRepository.save(pokemon);

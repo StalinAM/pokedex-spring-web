@@ -13,8 +13,7 @@ public class Abilities {
     @Column private String name;
 
    //CONSTRUCTOR
-    public Abilities() {
-    }
+    public Abilities() {}
 
     // GETTERS AND SETTERS
 
