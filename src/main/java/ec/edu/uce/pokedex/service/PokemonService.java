@@ -17,5 +17,13 @@ public class PokemonService {
     public Pokemon savePokemon(Pokemon pokemon) {
         return pokemonRepository.save(pokemon);
     }
+
+    public Pokemon findPokemonById(Long id) {
+        Optional<Pokemon> pokemon = pokemonRepository.findById(id);
+        return pokemon.orElse(null);
+    }
+    public List<Pokemon> findAllPokemons() {
+        return pokemonRepository.findAll();
+    }
 }
 
