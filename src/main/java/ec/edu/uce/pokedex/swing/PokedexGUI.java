@@ -204,7 +204,7 @@ public class PokedexGUI extends JFrame {
                     // Lógica para buscar por nombre de Pokémon
                     pokemonListModel.clear();
                     pokemons.forEach(pokemon -> {
-                        if(pokemon.getName().contains(query)) {
+                        if (pokemon.getName().toLowerCase().startsWith(query.toLowerCase())) {
                             pokemonListModel.addElement(pokemon.getName());
                         }
                     });
