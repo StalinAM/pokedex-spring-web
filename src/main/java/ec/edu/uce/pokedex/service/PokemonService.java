@@ -61,7 +61,7 @@ public class PokemonService {
                 .collect(Collectors.toList());
     }
 
-    // Método público para cargar todos los Pokémon
+    // Metodo para cargar todos los pokemons
     public List<Pokemon> loadPokemons() {
         return pokemonRepository.findAll();
     }

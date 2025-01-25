@@ -2,8 +2,15 @@ package ec.edu.uce.pokedex.entities;
 
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
 @Entity
 public class Abilities {
 
@@ -12,16 +19,5 @@ public class Abilities {
     private Long id;
     @Column private String name;
 
-   //CONSTRUCTOR
-    public Abilities() {}
 
-    // GETTERS AND SETTERS
-
-    public Long getId() { return id; }
-
-    public void setId(Long id) { this.id = id;}
-
-    public String getName() { return name; }
-
-    public void setName(String name) { this.name = name; }
 }
