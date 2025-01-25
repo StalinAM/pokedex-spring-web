@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,6 +45,7 @@ public class PokemonService {
     // Buscar Pokémon por habilidad
     @Transactional(readOnly = true)
     public List<Pokemon> getPokemonsByAbility(String abilityName) {
+        System.out.println("abilityName: " + abilityName);
         return pokemonRepository.findByAbilities_Name(abilityName).stream()
                 .filter(pokemon -> pokemon.getAbilities().stream()
                         .anyMatch(ability -> ability.getName().equalsIgnoreCase(abilityName)))
