@@ -7,6 +7,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
+import java.net.URL;
 import java.util.List;
 
 public class PokedexGUI extends JFrame {
@@ -16,7 +17,7 @@ public class PokedexGUI extends JFrame {
     private JTextField searchField;
     private JList<String> listPokemons;
     private DefaultListModel<String> pokemonListModel;
-    private JLabel idPokemon, namePokemon, heightPokemon, weightPokemon;
+    private JLabel idPokemon, namePokemon, heightPokemon, weightPokemon, imagePokemon;
     private JList<String> abilitiesList, typesList;
     private PokemonService pokemonService;
 
@@ -50,7 +51,7 @@ public class PokedexGUI extends JFrame {
 
         JPanel panel = new JPanel();
         panel.setBackground(Color.BLUE);
-        panel.setBounds(23, 49, 302, 448);
+        panel.setBounds(43, 51, 302, 448);
         contentPane.add(panel);
         panel.setLayout(null);
 
@@ -86,56 +87,56 @@ public class PokedexGUI extends JFrame {
         panel.add(lblTitle);
 
         JPanel detailsPanel = new JPanel();
-        detailsPanel.setBounds(346, 229, 501, 268);
+        detailsPanel.setBounds(391, 278, 456, 219);
         contentPane.add(detailsPanel);
         detailsPanel.setLayout(null);
 
         JLabel lblId = new JLabel("ID:");
-        lblId.setBounds(30, 10, 46, 14);
+        lblId.setBounds(30, 49, 46, 14);
         detailsPanel.add(lblId);
 
         JLabel lblHeight = new JLabel("ALTURA:");
-        lblHeight.setBounds(30, 90, 73, 14);
+        lblHeight.setBounds(30, 129, 73, 14);
         detailsPanel.add(lblHeight);
 
         JLabel lblWeight = new JLabel("PESO:");
-        lblWeight.setBounds(30, 130, 73, 14);
+        lblWeight.setBounds(30, 169, 73, 14);
         detailsPanel.add(lblWeight);
 
         JLabel lblName = new JLabel("NOMBRE:");
-        lblName.setBounds(30, 50, 73, 14);
+        lblName.setBounds(30, 89, 73, 14);
         detailsPanel.add(lblName);
 
         idPokemon = new JLabel("-");
-        idPokemon.setBounds(113, 10, 148, 14);
+        idPokemon.setBounds(113, 49, 148, 14);
         detailsPanel.add(idPokemon);
 
         namePokemon = new JLabel("-");
-        namePokemon.setBounds(113, 50, 148, 14);
+        namePokemon.setBounds(113, 89, 148, 14);
         detailsPanel.add(namePokemon);
 
         heightPokemon = new JLabel("-");
-        heightPokemon.setBounds(113, 90, 148, 14);
+        heightPokemon.setBounds(113, 129, 148, 14);
         detailsPanel.add(heightPokemon);
 
         weightPokemon = new JLabel("-");
-        weightPokemon.setBounds(113, 130, 148, 14);
+        weightPokemon.setBounds(113, 169, 148, 14);
         detailsPanel.add(weightPokemon);
 
         abilitiesList = new JList<>(new DefaultListModel<>());
-        abilitiesList.setBounds(30, 195, 155, 62);
+        abilitiesList.setBounds(271, 36, 155, 62);
         detailsPanel.add(abilitiesList);
 
         JLabel lblAbilities = new JLabel("HABILIDADES:");
-        lblAbilities.setBounds(30, 170, 108, 14);
+        lblAbilities.setBounds(271, 11, 108, 14);
         detailsPanel.add(lblAbilities);
 
         typesList = new JList<>(new DefaultListModel<>());
-        typesList.setBounds(242, 195, 155, 62);
+        typesList.setBounds(271, 140, 155, 62);
         detailsPanel.add(typesList);
 
         JLabel lblTypes = new JLabel("TIPOS:");
-        lblTypes.setBounds(242, 170, 73, 14);
+        lblTypes.setBounds(271, 115, 73, 14);
         detailsPanel.add(lblTypes);
 
         JButton searchButton = new JButton("BUSCAR");
@@ -155,11 +156,19 @@ public class PokedexGUI extends JFrame {
 
         JLabel lblFilter = new JLabel("CONSULTAR POR:");
         lblFilter.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
-        lblFilter.setBounds(23, 17, 120, 19);
+        lblFilter.setBounds(23, 19, 120, 19);
         contentPane.add(lblFilter);
 
         // Action Listeners
         searchButton.addActionListener(e -> searchPokemon(filterComboBox));
+
+        JPanel panel_1 = new JPanel();
+        panel_1.setBounds(508, 62, 225, 200);
+        contentPane.add(panel_1);
+
+        imagePokemon = new JLabel();
+        panel_1.add(imagePokemon);
+        imagePokemon.setBackground(new Color(240,240,240));
         sortButton.addActionListener(e -> sortPokemons(sortComboBox.getSelectedItem().toString()));
         listPokemons.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -207,7 +216,7 @@ public class PokedexGUI extends JFrame {
                     pokemonListModel.clear();
                     pokemons.forEach(pokemon -> {
                         System.out.println(pokemon.getName());
-                            pokemonListModel.addElement(pokemon.getName());
+                        pokemonListModel.addElement(pokemon.getName());
                     });
                     searchField.setText("");
                     break;
@@ -258,6 +267,12 @@ public class PokedexGUI extends JFrame {
                 DefaultListModel<String> typesModel = new DefaultListModel<>();
                 pokemon.getTypes().forEach(type -> typesModel.addElement(type.getName()));
                 typesList.setModel(typesModel);
+
+                // Cargar y mostrar la imagen del Pokémon
+                ImageIcon pokemonImage = new ImageIcon(new URL(pokemon.getImage())); // getImageUrl() debe devolver la URL de la imagen
+                Image image = pokemonImage.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+                ImageIcon scaledImagePokemon = new ImageIcon(image);
+                imagePokemon.setIcon(scaledImagePokemon);
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al mostrar detalles: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
