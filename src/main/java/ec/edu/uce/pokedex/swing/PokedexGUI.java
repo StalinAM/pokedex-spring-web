@@ -7,7 +7,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class PokedexGUI extends JFrame {
@@ -75,8 +74,9 @@ public class PokedexGUI extends JFrame {
         listPokemons = new JList<>(pokemonListModel);
         listPokemons.setVisibleRowCount(20);
         listPokemons.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        listPokemons.setBounds(10, 48, 273, 355);
-        panel.add(listPokemons);
+        JScrollPane scrollPane = new JScrollPane(listPokemons);
+        scrollPane.setBounds(10, 48, 273, 355);
+        panel.add(scrollPane);
 
         JLabel lblTitle = new JLabel("POKEDEX");
         lblTitle.setForeground(Color.WHITE);
@@ -159,7 +159,7 @@ public class PokedexGUI extends JFrame {
         contentPane.add(lblFilter);
 
         // Action Listeners
-        searchButton.addActionListener(e -> searchPokemon());
+        searchButton.addActionListener(e -> searchPokemon(filterComboBox));
         sortButton.addActionListener(e -> sortPokemons(sortComboBox.getSelectedItem().toString()));
         listPokemons.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -185,18 +185,47 @@ public class PokedexGUI extends JFrame {
         }
     }
 
-    private void searchPokemon() {
+    private void searchPokemon(JComboBox<String> filterComboBox) {
         try {
+            String selectFilter = filterComboBox.getSelectedItem().toString();
             String query = searchField.getText();
             List<Pokemon> pokemons = pokemonService.getAllPokemonsSorted("asc");
-            System.out.println(pokemons.toString());
-            pokemonListModel.clear();
-            pokemons.forEach(pokemon -> {
-                if(pokemon.getName().contains(query)) {
-                    System.out.println(pokemon.getName());
-                    pokemonListModel.addElement(pokemon.getName());
-                }
-            });
+            switch (selectFilter) {
+                case "POKEMON":
+                    // Lógica para buscar por nombre de Pokémon
+                    pokemonListModel.clear();
+                    pokemons.forEach(pokemon -> {
+                        if(pokemon.getName().contains(query)) {
+                            pokemonListModel.addElement(pokemon.getName());
+                        }
+                    });
+                    searchField.setText("");
+                    break;
+                case "TIPO":
+                    // Lógica para buscar por tipo de Pokémon
+                    pokemons = pokemonService.getPokemonsByType(query);
+                    pokemonListModel.clear();
+                    pokemons.forEach(pokemon -> {
+                        System.out.println(pokemon.getName());
+                            pokemonListModel.addElement(pokemon.getName());
+                    });
+                    searchField.setText("");
+                    break;
+                case "HABILIDAD":
+                    // Lógica para buscar por habilidad de Pokémon
+                    pokemons = pokemonService.getPokemonsByAbility(query);
+                    pokemonListModel.clear();
+                    pokemons.forEach(pokemon -> {
+                        System.out.println(pokemon.getName());
+                        pokemonListModel.addElement(pokemon.getName());
+                    });
+                    searchField.setText("");
+                    break;
+                default:
+                    System.out.println("Filtro desconocido");
+                    break;
+            }
+
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al buscar Pokémon: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
