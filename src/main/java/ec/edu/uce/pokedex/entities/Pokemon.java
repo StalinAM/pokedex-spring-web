@@ -16,10 +16,12 @@ public class Pokemon {
     @Column private double height;
     @Column private double weight;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pokemon_id")
     private List<Abilities> abilities;
 
-    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "pokemon_id")
     private List<Type> types;
 
 
@@ -84,6 +86,13 @@ public class Pokemon {
 
     public void setTypes(List<Type> types) {
         this.types = types;
+    }
+
+    @Override
+    public String toString() {
+        return "Pokemon{" +
+                ", name='" + name + '\'' +
+                '}';
     }
 }
 
