@@ -12,7 +12,7 @@ import java.util.List;
 
 public class PokeAPI {
     public List<String> fetchAllPokemonUrls() throws Exception {
-        String apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=100";
+        String apiUrl = "https://pokeapi.co/api/v2/pokemon?limit=1304";
         HttpURLConnection connection = (HttpURLConnection) new URL(apiUrl).openConnection();
         connection.setRequestMethod("GET");
 
