@@ -25,10 +25,10 @@ public class PokedexApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        pokeService.fetchAndSaveAllPokemon();
+        double timeData = pokeService.fetchAndSaveAllPokemon();
         if (!GraphicsEnvironment.isHeadless()) {
             SwingUtilities.invokeLater(() -> {
-                PokedexGUI pokedexGUI = new PokedexGUI(pokemonService);
+                PokedexGUI pokedexGUI = new PokedexGUI(pokemonService, timeData);
                 pokedexGUI.setVisible(true);
                 pokedexGUI.loadPokemons();
             });
