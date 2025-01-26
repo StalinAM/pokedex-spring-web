@@ -9,6 +9,7 @@ import java.awt.*;
 
 import java.net.URL;
 import java.util.List;
+import javax.swing.border.LineBorder;
 
 public class PokedexGUI extends JFrame {
 
@@ -17,7 +18,7 @@ public class PokedexGUI extends JFrame {
     private JTextField searchField;
     private JList<String> listPokemons;
     private DefaultListModel<String> pokemonListModel;
-    private JLabel idPokemon, namePokemon, heightPokemon, weightPokemon, imagePokemon;
+    private JLabel idPokemon, namePokemon, heightPokemon, weightPokemon, imagePokemon, timeLabel;
     private JList<String> abilitiesList, typesList;
     private PokemonService pokemonService;
 
@@ -26,7 +27,8 @@ public class PokedexGUI extends JFrame {
         EventQueue.invokeLater(() -> {
             try {
                 PokemonService pokemonService = new PokemonService(); // Replace with your actual service initialization
-                PokedexGUI frame = new PokedexGUI(pokemonService);
+                double timeData = 0.0;
+                PokedexGUI frame = new PokedexGUI(pokemonService, timeData);
                 frame.setVisible(true);
                 frame.loadPokemons(); // Load Pokémon data on startup
             } catch (Exception e) {
@@ -38,11 +40,12 @@ public class PokedexGUI extends JFrame {
     /**
      * Create the frame.
      */
-    public PokedexGUI(PokemonService pokemonService) {
+    public PokedexGUI(PokemonService pokemonService, double timeData) {
+        setTitle("POKEDEX");
         this.pokemonService = pokemonService;
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(100, 100, 873, 547);
+        setBounds(100, 100, 873, 556);
         contentPane = new JPanel();
         contentPane.setBackground(Color.RED);
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -50,6 +53,7 @@ public class PokedexGUI extends JFrame {
         contentPane.setLayout(null);
 
         JPanel panel = new JPanel();
+        panel.setBorder(null);
         panel.setBackground(Color.BLUE);
         panel.setBounds(43, 51, 302, 448);
         contentPane.add(panel);
@@ -57,118 +61,166 @@ public class PokedexGUI extends JFrame {
 
         JLabel lblNewLabel = new JLabel("ORDENAR:");
         lblNewLabel.setForeground(Color.WHITE);
-        lblNewLabel.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-        lblNewLabel.setBounds(10, 414, 68, 23);
+        lblNewLabel.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
+        lblNewLabel.setBounds(15, 414, 68, 23);
         panel.add(lblNewLabel);
 
         JComboBox<String> sortComboBox = new JComboBox<>(new String[]{"ASCENDENTE", "DESCENDENTE"});
-        sortComboBox.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 11));
-        sortComboBox.setBounds(75, 414, 109, 23);
+        sortComboBox.setFont(new Font("Cascadia Code PL", Font.BOLD, 12));
+        sortComboBox.setBounds(87, 414, 127, 23);
         panel.add(sortComboBox);
 
         JButton sortButton = new JButton("OK");
-        sortButton.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
-        sortButton.setBounds(194, 414, 89, 23);
+        sortButton.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
+        sortButton.setBounds(224, 414, 59, 23);
         panel.add(sortButton);
 
         pokemonListModel = new DefaultListModel<>();
         listPokemons = new JList<>(pokemonListModel);
+        listPokemons.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         listPokemons.setVisibleRowCount(20);
         listPokemons.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         JScrollPane scrollPane = new JScrollPane(listPokemons);
-        scrollPane.setBounds(10, 48, 273, 355);
+        scrollPane.setBounds(15, 48, 270, 355);
         panel.add(scrollPane);
 
         JLabel lblTitle = new JLabel("POKEDEX");
         lblTitle.setForeground(Color.WHITE);
         lblTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        lblTitle.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 20));
+        lblTitle.setFont(new Font("Cascadia Code PL", Font.BOLD, 20));
         lblTitle.setBounds(20, 11, 242, 26);
         panel.add(lblTitle);
 
         JPanel detailsPanel = new JPanel();
-        detailsPanel.setBounds(391, 278, 456, 219);
+        detailsPanel.setBackground(new Color(217, 0, 0));
+        detailsPanel.setBounds(391, 264, 445, 219);
         contentPane.add(detailsPanel);
         detailsPanel.setLayout(null);
 
         JLabel lblId = new JLabel("ID:");
+        lblId.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
         lblId.setBounds(30, 49, 46, 14);
         detailsPanel.add(lblId);
 
         JLabel lblHeight = new JLabel("ALTURA:");
+        lblHeight.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
         lblHeight.setBounds(30, 129, 73, 14);
         detailsPanel.add(lblHeight);
 
         JLabel lblWeight = new JLabel("PESO:");
+        lblWeight.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
         lblWeight.setBounds(30, 169, 73, 14);
         detailsPanel.add(lblWeight);
 
         JLabel lblName = new JLabel("NOMBRE:");
+        lblName.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
         lblName.setBounds(30, 89, 73, 14);
         detailsPanel.add(lblName);
 
         idPokemon = new JLabel("-");
+        idPokemon.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         idPokemon.setBounds(113, 49, 148, 14);
         detailsPanel.add(idPokemon);
 
         namePokemon = new JLabel("-");
+        namePokemon.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         namePokemon.setBounds(113, 89, 148, 14);
         detailsPanel.add(namePokemon);
 
         heightPokemon = new JLabel("-");
+        heightPokemon.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         heightPokemon.setBounds(113, 129, 148, 14);
         detailsPanel.add(heightPokemon);
 
         weightPokemon = new JLabel("-");
+        weightPokemon.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         weightPokemon.setBounds(113, 169, 148, 14);
         detailsPanel.add(weightPokemon);
 
-        abilitiesList = new JList<>(new DefaultListModel<>());
-        abilitiesList.setBounds(271, 36, 155, 62);
-        detailsPanel.add(abilitiesList);
-
-        JLabel lblAbilities = new JLabel("HABILIDADES:");
-        lblAbilities.setBounds(271, 11, 108, 14);
-        detailsPanel.add(lblAbilities);
-
         typesList = new JList<>(new DefaultListModel<>());
+        typesList.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
         typesList.setBounds(271, 140, 155, 62);
         detailsPanel.add(typesList);
 
         JLabel lblTypes = new JLabel("TIPOS:");
+        lblTypes.setFont(new Font("Cascadia Code PL", Font.BOLD, 12));
         lblTypes.setBounds(271, 115, 73, 14);
         detailsPanel.add(lblTypes);
 
+        JPanel panel_2 = new JPanel();
+        panel_2.setBackground(new Color(255, 255, 255));
+        panel_2.setBounds(10, 11, 425, 197);
+        detailsPanel.add(panel_2);
+        panel_2.setLayout(null);
+
+        abilitiesList = new JList<>(new DefaultListModel<>());
+        abilitiesList.setBounds(260, 33, 155, 62);
+        panel_2.add(abilitiesList);
+        abilitiesList.setFont(new Font("Cascadia Code PL", Font.PLAIN, 13));
+
+        JLabel lblAbilities = new JLabel("HABILIDADES:");
+        lblAbilities.setBounds(260, 8, 108, 14);
+        panel_2.add(lblAbilities);
+        lblAbilities.setFont(new Font("Cascadia Code PL", Font.BOLD, 12));
+
         JButton searchButton = new JButton("BUSCAR");
-        searchButton.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
+        searchButton.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
         searchButton.setBounds(609, 17, 89, 23);
         contentPane.add(searchButton);
 
         searchField = new JTextField();
-        searchField.setBounds(351, 18, 224, 20);
+        searchField.setFont(new Font("Cascadia Code PL", Font.PLAIN, 12));
+        searchField.setBounds(364, 19, 224, 20);
         contentPane.add(searchField);
         searchField.setColumns(10);
 
         JComboBox<String> filterComboBox = new JComboBox<>(new String[]{"POKEMON", "TIPO", "HABILIDAD"});
-        filterComboBox.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
-        filterComboBox.setBounds(146, 17, 179, 23);
+        filterComboBox.setFont(new Font("Cascadia Mono PL", Font.BOLD, 13));
+        filterComboBox.setBounds(166, 17, 179, 23);
         contentPane.add(filterComboBox);
 
         JLabel lblFilter = new JLabel("CONSULTAR POR:");
-        lblFilter.setFont(new Font("Tahoma", Font.BOLD | Font.ITALIC, 12));
-        lblFilter.setBounds(23, 19, 120, 19);
+        lblFilter.setForeground(new Color(0, 0, 0));
+        lblFilter.setFont(new Font("Cascadia Code PL", Font.BOLD, 13));
+        lblFilter.setBounds(36, 19, 120, 19);
         contentPane.add(lblFilter);
 
         // Action Listeners
         searchButton.addActionListener(e -> searchPokemon(filterComboBox));
 
         JPanel panel_1 = new JPanel();
-        panel_1.setBounds(508, 62, 225, 200);
+        panel_1.setBounds(506, 61, 205, 180);
         contentPane.add(panel_1);
 
         imagePokemon = new JLabel();
         panel_1.add(imagePokemon);
         imagePokemon.setBackground(new Color(240,240,240));
+
+        JLabel time = new JLabel("Tiempo subida de datos:");
+        time.setForeground(new Color(0, 0, 0));
+        time.setBackground(new Color(0, 0, 0));
+        time.setFont(new Font("Cascadia Code PL", Font.PLAIN, 12));
+        time.setBounds(557, 483, 167, 23);
+
+        contentPane.add(time);
+
+        JPanel panel_3 = new JPanel();
+        panel_3.setBackground(new Color(217, 0, 0));
+        panel_3.setBounds(496, 51, 224, 200);
+        contentPane.add(panel_3);
+
+        timeLabel = new JLabel("0.0 s");
+        timeLabel.setFont(new Font("Cascadia Code PL", Font.BOLD, 12));
+        timeLabel.setBounds(723, 483, 89, 22);
+        timeLabel.setText(timeData + " s");
+        contentPane.add(timeLabel);
+
+        JLabel lblImage = new JLabel("");
+        ImageIcon imagePokeball = new ImageIcon(ec.edu.uce.pokedex.swing.PokedexGUI.class.getResource("/images/pokeball.png"));
+        Image imagePokeballScaled = imagePokeball.getImage().getScaledInstance(125, 125, Image.SCALE_SMOOTH);
+        lblImage.setIcon(new ImageIcon(imagePokeballScaled));
+        lblImage.setBounds(357, 93, 125, 125);
+        contentPane.add(lblImage);
         sortButton.addActionListener(e -> sortPokemons(sortComboBox.getSelectedItem().toString()));
         listPokemons.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
@@ -185,10 +237,6 @@ public class PokedexGUI extends JFrame {
                 pokemonListModel.clear();
                 pokemons.forEach(pokemon -> pokemonListModel.addElement(pokemon.getName()));
             }
-            if(!query.isEmpty()){
-
-            }
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error loading Pokémon data: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -268,9 +316,8 @@ public class PokedexGUI extends JFrame {
                 pokemon.getTypes().forEach(type -> typesModel.addElement(type.getName()));
                 typesList.setModel(typesModel);
 
-                // Cargar y mostrar la imagen del Pokémon
-                ImageIcon pokemonImage = new ImageIcon(new URL(pokemon.getImage())); // getImageUrl() debe devolver la URL de la imagen
-                Image image = pokemonImage.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+                ImageIcon pokemonImage = new ImageIcon(new URL(pokemon.getImage()));
+                Image image = pokemonImage.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
                 ImageIcon scaledImagePokemon = new ImageIcon(image);
                 imagePokemon.setIcon(scaledImagePokemon);
             }
