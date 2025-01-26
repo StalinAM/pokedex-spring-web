@@ -27,12 +27,12 @@ public class PokeService {
     @Autowired
     private PokemonRepository pokemonRepository;
 
-    public void fetchAndSaveAllPokemon() throws Exception {
+    public double fetchAndSaveAllPokemon() throws Exception {
         PokeAPI apiClient = new PokeAPI();
         List<String> pokemonUrls = apiClient.fetchAllPokemonUrls();
 
         // Medir el tiempo de inicio
-        long startTime = System.nanoTime();
+        long startTime = System.currentTimeMillis();
 
         // Crear un pool de hilos
         ExecutorService executorService = Executors.newFixedThreadPool(10); // Usa 10 hilos concurrentes
@@ -52,14 +52,16 @@ public class PokeService {
         CompletableFuture.allOf(futures.toArray(new CompletableFuture[0])).join();
 
         // Medir el tiempo de finalización
-        long endTime = System.nanoTime();
+        long endTime = System.currentTimeMillis();
 
         // Cerrar el pool de hilos
         executorService.shutdown();
 
         // Calcular y mostrar el tiempo total en segundos
-        double totalTimeSeconds = (endTime - startTime) / 1_000_000_000.0;
+        double totalTimeSeconds = (endTime - startTime) / 1000.0;
         System.out.printf("¡Todos los Pokémon han sido procesados y guardados! Tiempo total: %.2f segundos%n", totalTimeSeconds);
+
+        return totalTimeSeconds;
     }
 
     private void processAndSavePokemon(String url) throws Exception {
