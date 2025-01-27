@@ -57,6 +57,10 @@ public class PokeService {
         // Cerrar el pool de hilos
         executorService.shutdown();
 
+        //Sin hilos
+//        for (String url : pokemonUrls) {
+//            processAndSavePokemon(url);
+//        }
         // Calcular y mostrar el tiempo total en segundos
         double totalTimeSeconds = (endTime - startTime) / 1000.0;
         System.out.printf("¡Todos los Pokémon han sido procesados y guardados! Tiempo total: %.2f segundos%n", totalTimeSeconds);
