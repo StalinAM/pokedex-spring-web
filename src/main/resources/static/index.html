@@ -1,70 +1,73 @@
 <!DOCTYPE html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pokedex</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="https://unpkg.com/atropos@2.0.2/atropos.css" />
-  </head>
-  <body>
-    <header>
-      <h1>POKEDEX</h1>
-    </header>
-    <main>
-      <div class="container-left">
-        <div class="circle"></div>
-        <div class="container-details">
-          <div class="container-img">
-            <div class="container-btn">
-              <div class="btn-on"></div>
-              <div class="btn-on"></div>
-            </div>
-            <div class="image">
-              <div class="atropos my-atropos">
-                <div class="atropos-scale">
-                  <div class="atropos-rotate">
-                    <div class="atropos-inner">
-                      <img
-                        data-atropos-offset="7"
-                        src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
-                        alt="Bulbasaur"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="container-details-pokemon">
-            <p><strong>Nombre: </strong></p>
-            <p><strong>Altura: </strong></p>
-            <p><strong>Peso: </strong></p>
-            <p><strong>Habilidades: </strong></p>
-          </div>
-          <div class="container-type">
-            <p><strong>Tipos: </strong></p>
-          </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pokedex</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="https://unpkg.com/atropos@2.0.2/atropos.css" />
+</head>
+<body>
+<header>
+  <h1>POKEDEX</h1>
+</header>
+<main>
+  <div class="container-left">
+    <div class="circle"></div>
+    <div class="container-details">
+      <div class="container-img">
+        <div class="container-btn">
+          <div class="btn-on"></div>
+          <div class="btn-on"></div>
+        </div>
+        <div class="image">
+          <img
+                  class="pokemon-image"
+                  src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/1.png"
+                  alt="Bulbasaur"
+          />
         </div>
       </div>
-      <div class="container-right">
-        <form>
-          <label class="pokemon-label" for="pokemon">
-            <input
-              class="pokemon-input"
-              type="text"
-              name="pokemon"
-              placeholder="charmander"
-            />
-          </label>
-        </form>
-        <div class="list-pokemons">
-          <h2>Lista de pokemons</h2>
-          <ul></ul>
-        </div>
+      <div class="container-details-pokemon">
+        <p><strong>Nombre: </strong> <span class="pokemon-name"></span></p>
+        <p>
+          <strong>Altura: </strong> <span class="pokemon-height"></span> cm
+        </p>
+        <p>
+          <strong>Peso: </strong> <span class="pokemon-weight"></span> kg
+        </p>
+        <p>
+          <strong>Habilidades: </strong>
+          <span class="pokemon-abilities"></span>
+        </p>
       </div>
-    </main>
-    <script src="https://unpkg.com/atropos@1.0.2/atropos.min.js"></script>
-    <script type="module" src="/main.js"></script>
-  </body>
+      <ul class="pokemon-types"></ul>
+    </div>
+  </div>
+  <div class="container-right">
+    <form class="form-shearch">
+      <select name="" id="">
+        <option value="nombre">Nombre</option>
+        <option value="tipo">Tipo</option>
+        <option value="habilidad">Habilidad</option>
+      </select>
+      <label class="pokemon-label" for="pokemon">
+        <input
+                class="pokemon-input"
+                type="text"
+                name="pokemon"
+                placeholder="charmander"
+        />
+      </label>
+      <button class="btn-form" type="submit">Buscar</button>
+    </form>
+    <div class="list-pokemons">
+      <h2>Lista de pokemon</h2>
+      <ul class="container-list-pokemon"></ul>
+    </div>
+  </div>
+</main>
+<script src="https://unpkg.com/atropos@1.0.2/atropos.min.js"></script>
+<script type="module" src="/main.js"></script>
+</body>
 </html>
