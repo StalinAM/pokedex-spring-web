@@ -1,84 +1,7 @@
-html,
-body,
-div,
-span,
-applet,
-object,
-iframe,
-h1,
-h2,
-h3,
-h4,
-h5,
-h6,
-p,
-blockquote,
-pre,
-a,
-abbr,
-acronym,
-address,
-big,
-cite,
-code,
-del,
-dfn,
-em,
-img,
-ins,
-kbd,
-q,
-s,
-samp,
-small,
-strike,
-strong,
-sub,
-sup,
-tt,
-var,
-b,
-u,
-i,
-center,
-dl,
-dt,
-dd,
-ol,
-ul,
-li,
-fieldset,
-form,
-label,
-legend,
-table,
-caption,
-tbody,
-tfoot,
-thead,
-tr,
-th,
-td,
-article,
-aside,
-canvas,
-details,
-embed,
-figure,
-figcaption,
-footer,
-header,
-hgroup,
-menu,
-nav,
-output,
-ruby,
-section,
-summary,
-time,
-mark,
-audio,
-video {
+/* Reset de estilos generales */
+*,
+*::before,
+*::after {
   margin: 0;
   padding: 0;
   border: 0;
@@ -86,42 +9,6 @@ video {
   font: inherit;
   vertical-align: baseline;
   box-sizing: border-box;
-}
-/* HTML5 display-role reset for older browsers */
-article,
-aside,
-details,
-figcaption,
-figure,
-footer,
-header,
-hgroup,
-menu,
-nav,
-section {
-  display: block;
-}
-body {
-  line-height: 1;
-}
-ol,
-ul {
-  list-style: none;
-}
-blockquote,
-q {
-  quotes: none;
-}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
-  content: '';
-  content: none;
-}
-table {
-  border-collapse: collapse;
-  border-spacing: 0;
 }
 .type-normal {
   background-color: #a8a878;
@@ -177,28 +64,54 @@ table {
 .type-fairy {
   background-color: #ee99ac;
 }
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+li {
+  list-style: none;
+}
+
+/* Configuración general del body */
 body {
   background-color: rgb(24, 23, 23);
   width: 100%;
-  min-height: 100dvh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   gap: 20px;
   font-family: 'Roboto', sans-serif;
+  line-height: 1.5;
 }
+
+/* Estilos del encabezado */
 header {
   color: white;
   font-weight: bold;
   font-size: xx-large;
 }
+
+/* Estilos del main */
 main {
   display: grid;
   max-width: 80%;
   height: 700px;
   grid-template-columns: 1fr 1fr;
 }
+
+/* Estilo de los contenedores */
 .container-left,
 .container-right {
   padding: 10px;
@@ -207,26 +120,32 @@ main {
   background-color: #dc0a2d;
   display: flex;
   flex-direction: column;
-  gap: 20px;
 }
+
 .container-left {
-  border-radius: 10px 0px 0 10px;
+  border-radius: 10px 0 0 10px;
   border-width: 5px;
   border-right-style: solid;
   border-color: #c21532;
   padding: 20px;
+  gap: 10px;
 }
+
 .container-right {
-  border-radius: 0px 10px 10px 0px;
+  border-radius: 0 10px 10px 0;
   border-color: #c21532;
   border-width: 5px;
   border-left-style: solid;
   padding: 40px 30px 20px 20px;
   align-items: center;
+  gap: 20px;
 }
+
+/* Lista de Pokémon */
 .list-pokemons {
   width: 100%;
-  height: 100%;
+  min-height: 300px; /* Ajuste para asegurar que siempre tenga un mínimo de altura */
+  max-height: 100%; /* Limita la altura máxima */
   border-radius: 20px;
   background-color: #163355;
   display: flex;
@@ -235,11 +154,14 @@ main {
   gap: 10px;
   padding: 20px;
 }
+
 .list-pokemons h2 {
   color: white;
   font-weight: bold;
   font-size: 1.4rem;
 }
+
+/* Estilos de imagen */
 .container-img {
   width: 410px;
   height: 250px;
@@ -252,6 +174,7 @@ main {
   justify-content: center;
   gap: 20px;
 }
+
 .image {
   width: 100%;
   height: 100%;
@@ -259,38 +182,48 @@ main {
   background-color: #bfdbfe;
   overflow: hidden;
 }
+
 img {
   width: 370px;
   height: 175px;
   border-radius: 20px;
   object-fit: contain;
+  animation: floatAnimation 2s ease-in-out infinite; /* Animación continua */
 }
+
+/* Estilo de botones */
 .container-btn {
   display: flex;
   gap: 15px;
   justify-items: center;
   align-items: center;
 }
+
 .btn-on {
   width: 15px;
   height: 15px;
   border-radius: 100%;
   background-color: #dc0a2d;
 }
+
 .pokemon-label {
   background-color: white;
   border-radius: 10px;
   font-size: 1rem;
   padding: 8px 16px;
 }
+
 .pokemon-input {
   border: none;
   background-color: transparent;
   font-size: 1rem;
 }
+
 .pokemon-input:focus {
   outline: none;
 }
+
+/* Detalles del Pokémon */
 .container-details-pokemon {
   width: 100%;
   padding: 20px;
@@ -300,9 +233,11 @@ img {
   flex-direction: column;
   gap: 16px;
 }
+
 .container-details-pokemon strong {
   font-weight: bold;
 }
+
 .circle {
   width: 80px;
   height: 80px;
@@ -312,19 +247,100 @@ img {
   border-style: solid;
   border-color: white;
 }
+
 .container-details {
   margin-top: 20px;
   display: flex;
   align-items: center;
   flex-direction: column;
-  gap: 20px;
+  gap: 30px;
 }
-.container-type {
-  font-weight: bold;
-  padding: 0 20px;
-  width: 100%;
+
+.container-list-pokemon {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 10px;
+  width: 100%;
+  overflow-y: auto;
+}
+.container-list-pokemon::-webkit-scrollbar {
+  width: 10px;
+}
+.container-list-pokemon::-webkit-scrollbar-track {
+  background: #0e2035;
+  border-radius: 4px;
+}
+.container-list-pokemon::-webkit-scrollbar-thumb {
+  background: #183e69;
+  border-radius: 4px;
+}
+/* Estilo de los ítems */
+.pokemon-item {
+  width: 95%;
+  padding: 16px 24px;
+  color: white;
+  background-color: #183e69;
+  border-radius: 10px;
+  text-transform: capitalize;
+  transition: background-color 300ms ease-in-out, transform 300ms ease-in-out; /* Definir la transición para el movimiento y el color */
+}
+
+.pokemon-item:hover {
+  transform: translateX(5px); /* Movimiento hacia la derecha */
+  background-color: #1f4e94; /* Cambio de color de fondo */
+  cursor: pointer;
+}
+.pokemon-types {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.pokemon-types li {
+  text-align: center;
+  width: 100px;
+  padding: 6px 16px;
+  border-radius: 20px;
+  color: rgb(238, 238, 238);
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.form-shearch {
+  display: flex;
   gap: 20px;
+}
+.form-shearch select {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: #183e69;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+}
+.form-shearch select:focus {
+  outline: none;
+}
+.btn-form {
+  padding: 8px 16px;
+  border-radius: 10px;
+  border: none;
+  background-color: #183e69;
+  color: white;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 300ms ease-in-out;
+}
+.btn-form:hover {
+  background-color: #1f4e94;
+}
+@keyframes floatAnimation {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
 }
