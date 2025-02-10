@@ -4,129 +4,101 @@ const myAtropos = Atropos({
   shadowScale: 0
 })
 
-const typeColors = {
-  normal: '#A8A878',
-  fighting: '#C03028',
-  flying: '#A890F0',
-  poison: '#A040A0',
-  ground: '#E0C068',
-  rock: '#B8A038',
-  bug: '#A8B820',
-  ghost: '#705898',
-  steel: '#B8B8D0',
-  fire: '#F08030',
-  water: '#6890F0',
-  grass: '#78C850',
-  electric: '#F8D030',
-  psychic: '#F85888',
-  ice: '#98D8D8',
-  dragon: '#7038F8',
-  dark: '#705848',
-  fairy: '#EE99AC'
-}
 // Referencias a elementos del DOM
-const pokemonImage = document.getElementById('pokemon-image')
-const pokemonName = document.getElementById('pokemon-name')
-const pokemonHeight = document.getElementById('pokemon-height')
-const pokemonWeight = document.getElementById('pokemon-weight')
-const pokemonAbilities = document.getElementById('pokemon-abilities')
-const pokemonTypes = document.getElementById('pokemon-types')
-const searchForm = document.getElementById('search-form')
-const searchInput = document.getElementById('search-input')
-const pokemonButtons = document.getElementById('pokemon-buttons')
+const listPokemonContainer = document.querySelector('.container-list-pokemon')
+
+const pokemonName = document.querySelector('.pokemon-name')
+const pokemonHeight = document.querySelector('.pokemon-height')
+const pokemonWeight = document.querySelector('.pokemon-weight')
+const pokemonAbilities = document.querySelector('.pokemon-abilities')
+const pokemonTypes = document.querySelector('.pokemon-types')
+const pokemonImage = document.querySelector('.pokemon-image')
+
+const searchForm = document.querySelector('.form-shearch')
+const searchInput = document.querySelector('.pokemon-input')
+const searchType = document.querySelector('.form-shearch select')
+const btnForm = document.querySelector('.btn-form')
+
 // Función para cargar un Pokémon específico
+async function getPokemonsByFilter(filterType, query) {
+  let url = 'http://localhost:8080/api/pokemons'
 
-async function getAllPokemons() {
-  const url = 'http://localhost:8080/api/pokemons?order=ascendente';
-
-  try {
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error('Error al obtener los Pokémon');
+  if (query.trim() !== '') {
+    switch (filterType) {
+      case 'nombre':
+        url += `/${query}`
+        break
+      case 'tipo':
+        url += `/type/${query}`
+        break
+      case 'habilidad':
+        url += `/ability/${query}`
+        break
     }
-    const data = await response.json();
-    console.log(data);
-    return data;
-  } catch (error) {
-    console.error(error);
-    return [];
   }
-}
+  console.log(url)
 
-// Usage of the function
-getAllPokemons().then(pokemons => {
-  // Handle the Pokémon data here
-  console.log(pokemons);
-});
-
-// Usage of the function
-getAllPokemons().then(pokemons => {
-  // Handle the Pokémon data here
-  console.log(pokemons);
-});
-// Uso de la función
-getAllPokemons()
-async function loadPokemon(nameOrId) {
   try {
-    const response = await fetch(
-      `https://pokeapi.co/api/v2/pokemon/${nameOrId.toLowerCase()}`
-    )
-    const data = await response.json()
-
-    // Actualizar la imagen
-    pokemonImage.src = data.sprites.other['official-artwork'].front_default
-    pokemonImage.alt = data.name
-
-    // Actualizar información básica
-    pokemonName.textContent = data.name
-    pokemonHeight.textContent = data.height
-    pokemonWeight.textContent = data.weight
-
-    // Actualizar habilidades
-    const abilities = data.abilities.map((a) => a.ability.name).join(', ')
-    pokemonAbilities.textContent = abilities
-
-    // Actualizar tipos
-    pokemonTypes.innerHTML = ''
-    data.types.forEach((t) => {
-      const typeSpan = document.createElement('span')
-      typeSpan.className = 'type-badge'
-      typeSpan.textContent = t.type.name
-      typeSpan.style.backgroundColor = typeColors[t.type.name] || '#A8A878'
-      pokemonTypes.appendChild(typeSpan)
-    })
+    const response = await fetch(url)
+    if (!response.ok) throw new Error('No se encontraron Pokémon')
+    return await response.json()
   } catch (error) {
-    console.error('Error al cargar el Pokémon:', error)
+    console.error(error)
+    return []
   }
 }
-// Función para cargar la lista de Pokémon
-async function loadPokemonList() {
-  try {
-    const response = await fetch('https://pokeapi.co/api/v2/pokemon?limit=151')
-    const data = await response.json()
 
-    pokemonButtons.innerHTML = ''
-    data.results.forEach((pokemon) => {
-      const button = document.createElement('button')
-      button.textContent = pokemon.name
-      button.onclick = () => {
-        searchInput.value = pokemon.name
-        loadPokemon(pokemon.name)
-      }
-      pokemonButtons.appendChild(button)
-    })
-  } catch (error) {
-    console.error('Error al cargar la lista de Pokémon:', error)
-  }
+function showPokemonDetails(pokemon) {
+  pokemonName.textContent = pokemon.name
+  pokemonHeight.textContent = pokemon.height
+  pokemonWeight.textContent = pokemon.weight
+  pokemonAbilities.textContent = pokemon.abilities
+      .map((ability) => ability.name)
+      .join(', ')
+  pokemonTypes.innerHTML = ''
+  pokemon.types.forEach((type) => {
+    const typeItem = document.createElement('li')
+    typeItem.className = `type-${type.name.toLowerCase()}` // Usar el tipo como clase para el color
+    typeItem.textContent = type.name
+    pokemonTypes.appendChild(typeItem)
+  })
+  pokemonImage.src = pokemon.image
 }
-// Event listeners
-searchForm.onsubmit = (e) => {
-  e.preventDefault()
-  if (searchInput.value.trim()) {
-    loadPokemon(searchInput.value.trim())
+
+async function updatePokemonList() {
+  const filterType = searchType.value
+  const query = searchInput.value.trim()
+
+  const pokemons = await getPokemonsByFilter(filterType, query)
+  listPokemonContainer.innerHTML = ''
+  console.log(pokemons)
+
+  if (pokemons.length === 0) {
+    listPokemonContainer.innerHTML = '<p>No se encontraron Pokémon</p>'
+    return
   }
+  if (filterType === 'nombre') {
+    const pokemonItem = document.createElement('li')
+    pokemonItem.textContent = pokemons.name
+    pokemonItem.className = 'pokemon-item'
+    pokemonItem.addEventListener('click', () => showPokemonDetails(pokemons))
+    listPokemonContainer.appendChild(pokemonItem)
+    return
+  }
+
+  pokemons.forEach((pokemon) => {
+    const pokemonItem = document.createElement('li')
+    pokemonItem.textContent = pokemon.name
+    pokemonItem.className = 'pokemon-item'
+    pokemonItem.addEventListener('click', () => showPokemonDetails(pokemon))
+    listPokemonContainer.appendChild(pokemonItem)
+  })
 }
-// Cargar la lista inicial de Pokémon
-loadPokemonList()
-getAllPokemons()
+// Manejar el evento de búsqueda
+searchForm.addEventListener('submit', (event) => {
+  event.preventDefault()
+  updatePokemonList()
+})
+
+// Cargar la lista inicial
+document.addEventListener('DOMContentLoaded', updatePokemonList)
