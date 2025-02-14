@@ -163,6 +163,7 @@ main {
 
 /* Estilos de imagen */
 .container-img {
+  position: relative;
   width: 410px;
   height: 250px;
   border-radius: 5px;
@@ -332,6 +333,16 @@ img {
 }
 .btn-form:hover {
   background-color: #1f4e94;
+}
+.pokemon-id {
+  position: absolute;
+  right: 20px;
+  color: white;
+  padding: 4px 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  background-color: #4ca3d9;
+  border-radius: 10px;
 }
 @keyframes floatAnimation {
   0% {

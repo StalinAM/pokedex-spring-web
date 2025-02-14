@@ -13,6 +13,7 @@ const pokemonWeight = document.querySelector('.pokemon-weight')
 const pokemonAbilities = document.querySelector('.pokemon-abilities')
 const pokemonTypes = document.querySelector('.pokemon-types')
 const pokemonImage = document.querySelector('.pokemon-image')
+const pokemonId = document.querySelector('.pokemon-id')
 
 const searchForm = document.querySelector('.form-shearch')
 const searchInput = document.querySelector('.pokemon-input')
@@ -56,6 +57,7 @@ function showPokemonDetails(pokemon) {
   pokemonName.textContent = pokemon.name || 'Desconocido'
   pokemonHeight.textContent = pokemon.height || 'N/A'
   pokemonWeight.textContent = pokemon.weight || 'N/A'
+  pokemonId.textContent = `# ${pokemon.id || 'N/A'}`
   pokemonAbilities.textContent = (pokemon.abilities || [])
       .map((ability) => ability.name)
       .join(', ')
@@ -96,7 +98,8 @@ async function updatePokemonList() {
     })
   } catch (error) {
     console.error('Error al cargar Pokémon:', error)
-    listPokemonContainer.innerHTML = '<p>Error al obtener datos. Inténtalo más tarde.</p>'
+    listPokemonContainer.innerHTML =
+        '<p>Error al obtener datos. Inténtalo más tarde.</p>'
   }
 }
 
