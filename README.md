@@ -1,16 +1,15 @@
-# Pokédex
+![](src\main\resources\images\preview.png)
 
-Este proyecto es una aplicación web desarrollada con Spring Boot que permite a los usuarios explorar y obtener información detallada sobre diferentes Pokémon. La aplicación consume datos de la [PokeAPI](https://pokeapi.co/) para proporcionar información actualizada sobre cada Pokémon.
+Este proyecto es una aplicación web desarrollada con Spring Boot y Spring Web que permite a los usuarios explorar y obtener información detallada sobre diferentes Pokémon. La aplicación consume datos de la [PokeAPI](https://pokeapi.co/) para proporcionar información actualizada sobre cada Pokémon.
 
 ---
 
 ## Índice
 
-- [Pokédex](#pokédex)
-  - [Índice](#índice)
-  - [Características](#características)
-  - [Tecnologías Utilizadas](#tecnologías-utilizadas)
-  - [Instalación](#instalación)
+- [Índice](#índice)
+- [Características](#características)
+- [Tecnologías Utilizadas](#tecnologías-utilizadas)
+- [Instalación](#instalación)
 
 ---
 
